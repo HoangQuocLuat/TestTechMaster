@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        #chat-container {
+            width: 50%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h2>Chat with API</h2>
+        <input type="text" id="userInput" placeholder="Enter your message...">
+        <button onclick="sendMessage()">Send</button>
+        <div id="response"></div>
+    </div>
+    
+    <script>
+        async function sendMessage() {
+            const userMessage = document.getElementById("userInput").value;
+            const responseDiv = document.getElementById("response");
+            
+            if (!userMessage) {
+                responseDiv.innerHTML = "Please enter a message.";
+                return;
+            }
+
+            const response = await fetch("http://localhost:8080/api/v1/chat", {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: userMessage })
+            });
+            
+            const data = await response.json();
+            responseDiv.innerHTML = data;
+        }
+    </script>
+</body>
+</html>
