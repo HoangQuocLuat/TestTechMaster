@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSML Generator</title>
+</head>
+<body>
+    <h2>SSML Generator</h2>
+    <textarea id="conversation" rows="10" cols="50" placeholder="Nhập hội thoại..."></textarea>
+    <br>
+    <label for="voice1">Voice 1:</label>
+    <select id="voice1">
+        <option value="en-US-AndrewMultilingualNeural">en-US-AndrewMultilingualNeural</option>
+        <option value="en-US-ChristopherNeural">en-US-ChristopherNeural</option>
+        <option value="en-US-EricNeural">en-US-EricNeural</option>
+        <option value="vi-VN-HoaiMyNeural">vi-VN-HoaiMyNeural</option>
+        <option value="vi-VN-NamMinhNeural">vi-VN-NamMinhNeural</option>
+    </select>
+    
+    <label for="voice2">Voice 2:</label>
+    <select id="voice2">
+        <option value="en-US-AndrewMultilingualNeural">en-US-AndrewMultilingualNeural</option>
+        <option value="en-US-ChristopherNeural">en-US-ChristopherNeural</option>
+        <option value="en-US-EricNeural">en-US-EricNeural</option>
+        <option value="vi-VN-HoaiMyNeural">vi-VN-HoaiMyNeural</option>
+        <option value="vi-VN-NamMinhNeural">vi-VN-NamMinhNeural</option>
+    </select>
+    
+    <br><br>
+    <button onclick="generateSSML()">Tạo SSML</button>
+    
+    <script>
+        function generateSSML() {
+            const conversation = document.getElementById("conversation").value.trim();
+            const voice1 = document.getElementById("voice1").value;
+            const voice2 = document.getElementById("voice2").value;
+            
+            if (!conversation) {
+                alert("Vui lòng nhập hội thoại!");
+                return;
+            }
+            
+            const lines = conversation.split("\n");
+            let ssml = "<speak>";
+            
+            lines.forEach((line, index) => {
+                const parts = line.split(":");
+                if (parts.length < 2) return;
+                
+                const speaker = parts[0].trim();
+                const text = parts.slice(1).join(":").trim();
+                const voice = index % 2 === 0 ? voice1 : voice2;
+                
+                ssml += `\n    <voice name="${voice}">${text}</voice>`;
+            });
+            
+            ssml += "\n</speak>";
+            
+            const blob = new Blob([ssml], { type: "application/ssml+xml" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "conversation.ssml";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>

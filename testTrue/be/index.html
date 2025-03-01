@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSML Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        textarea { width: 100%; height: 150px; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; white-space: pre-wrap; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <label for="voiceA">Voice A:</label>
+    <select id="voiceA">
+        <option value="en-US-AndrewMultilingualNeural">en-US-AndrewMultilingualNeural</option>
+        <option value="en-US-ChristopherNeural">en-US-ChristopherNeural</option>
+        <option value="en-US-EricNeural">en-US-EricNeural</option>
+        <option value="vi-VN-HoaiMyNeural">vi-VN-HoaiMyNeural</option>
+        <option value="vi-VN-NamMinhNeural">vi-VN-NamMinhNeural</option>
+    </select>
+    
+    <label for="voiceB">Voice B:</label>
+    <select id="voiceB">
+        <option value="en-US-AndrewMultilingualNeural">en-US-AndrewMultilingualNeural</option>
+        <option value="en-US-ChristopherNeural">en-US-ChristopherNeural</option>
+        <option value="en-US-EricNeural">en-US-EricNeural</option>
+        <option value="vi-VN-HoaiMyNeural">vi-VN-HoaiMyNeural</option>
+        <option value="vi-VN-NamMinhNeural">vi-VN-NamMinhNeural</option>
+    </select>
+    
+    <button onclick="generateSSML()">Xuất SSML</button>
+    <br><br>
+    <textarea id="conversation" placeholder="Nhập hội thoại..."></textarea>
+    <h3>SSML Output:</h3>
+    <pre id="ssmlOutput" onclick="copySSML()"></pre>
+    
+    <script>
+        function generateSSML() {
+            const conversation = document.getElementById("conversation").value.trim();
+            const voiceA = document.getElementById("voiceA").value;
+            const voiceB = document.getElementById("voiceB").value;
+            
+            if (!conversation) {
+                alert("Vui lòng nhập hội thoại!");
+                return;
+            }
+            
+            const lines = conversation.split("\n");
+            let ssml = "<speak xml:lang=\"vi-VN\">";
+            
+            lines.forEach((line, index) => {
+                const voice = index % 2 === 0 ? voiceA : voiceB;
+                ssml += `\n    <voice name=\"${voice}\">${line.substring(3)}</voice>`;
+            });
+            
+            ssml += "\n</speak>";
+            
+            document.getElementById("ssmlOutput").textContent = ssml;
+        }
+        
+        function copySSML() {
+            const ssmlText = document.getElementById("ssmlOutput").textContent;
+            navigator.clipboard.writeText(ssmlText).then(() => {
+                alert("Đã sao chép SSML!");
+            });
+        }
+    </script>
+</body>
+</html>

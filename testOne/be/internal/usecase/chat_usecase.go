@@ -28,7 +28,7 @@ func NewChatUseCase(config *viper.Viper) *ChatUseCase {
 func (c *ChatUseCase) Chat(ctx context.Context, request *model.ChatRequest) (string, error) {
 	// Chuẩn bị payload
 	payload := map[string]interface{}{
-		"model": "gemma2-9b-it",
+		"model": "deepseek-r1-distill-llama-70b",
 		"messages": []map[string]string{
 			{
 				"role":    "user",
